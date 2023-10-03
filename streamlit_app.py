@@ -1,5 +1,10 @@
+# Import the libraries
 import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-st.title('🎈 App Name')
+# Full view.
+st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
-st.write('Hello world!')
+st.header("Michigan State Covid Vaccinations")
