@@ -45,15 +45,6 @@ chart_type1 = st.sidebar.selectbox(
     options=['Bar Graph', 'Pie Chart']
 )
 
-# st.sidebar.write('Filter the race to view the Dose intakes')
-# chart_type2 = st.sidebar.selectbox(
-#     label='Chart 4 - Filter by Race/Ethnicity:',
-#     options=['Select', 'Hispanic', 'NH White', 'NH Black',
-#              'NH Asian/Native Hawaiian/Other Pacific Islands', 'NH American Indian/Alaska Native']
-# )
-
-######### End of sidebar #################
-
 # chart 1 - Option 1
 st.subheader('2.0 Data Exploration')
 st.write('Chart 1 - Residents Vaccinated by age-group')
@@ -130,10 +121,7 @@ st.write('The native asians/Native Hawaii population recorded the highest vaccin
 st.write("About 67.8% of The white and Hispanic population got the vaccine")
 st.write('Only about 45.1% of the American Indian and 52.4% of the total black population in Michigan got the vaccine')
 
-
 # Selection data
-
-
 st.subheader('Chart 4 - Dosage coverage by Race/Ethnicity')
 
 # Select the options
@@ -155,10 +143,28 @@ st.subheader('Chart 5- Explore/Create your own visualizations')
 
 #List the counties
 counties = df['County'].unique()
+age_group = df['Age Group'].unique()
+race_ethnicity = df['Race/Ethnicity'].unique()
+dose_administered = df['Dose'].unique()
 
 county_select  = st.selectbox(
     label = 'County:',
     options = np.insert(counties,0,'Select All')
+)
+
+age_group_select  = st.selectbox(
+    label = 'Age Group:',
+    options = np.insert(age_group,0,'Select All')
+)
+
+race_select  = st.selectbox(
+    label = 'Race/Ethnicity:',
+    options = np.insert(race_ethnicity,0,'Select All')
+)
+
+dose_select  = st.selectbox(
+    label = 'Dose:',
+    options = np.insert(dose_administered,0,'Select All')
 )
 
 
