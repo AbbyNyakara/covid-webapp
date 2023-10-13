@@ -120,26 +120,30 @@ st.pyplot(plt4.get_figure())
 st.write('The native asians/Native Hawaii population recorded the highest vaccination rates')
 st.write("About 67.8% of The white and Hispanic population got the vaccine")
 st.write('Only about 45.1% of the American Indian and 52.4% of the total black population in Michigan got the vaccine')
-
 # Selection data
 st.subheader('Chart 4 - Dosage coverage by Race/Ethnicity')
 
 # Select the options
 chart_type2  = st.selectbox(
     label='Chart 4 - Filter by Race/Ethnicity:',
-    options=['Select', 'Hispanic', 'NH White', 'NH Black',
+    options=['Select All', 'Hispanic', 'NH White', 'NH Black',
              'NH Asian/Native Hawaiian/Other Pacific Islands', 'NH American Indian/Alaska Native']
 )
 
-plt.title(f'Dosage coverage for {chart_type2}')
-selected_df = df_dosage[df_dosage["Race/Ethnicity"] == f"{chart_type2}"]
-
-fig3 = px.pie(selected_df, values='Residents Vaccinated', names='Dose',
+if chart_type2 == 'Select All':
+    all_fig = px.pie(df, values='Residents Vaccinated', names='Dose',
              color_discrete_sequence=px.colors.sequential.RdBu)
-st.plotly_chart(fig3)
+    st.plotly_chart(all_fig)
+else:
+    plt.title(f'Dosage coverage for {chart_type2}')
+    selected_df = df_dosage[df_dosage["Race/Ethnicity"] == f"{chart_type2}"]
+
+    fig3 = px.pie(selected_df, values='Residents Vaccinated', names='Dose',
+                color_discrete_sequence=px.colors.sequential.RdBu)
+    st.plotly_chart(fig3)
 
 # Part 5
-st.subheader('Chart 5- Explore/Create your own visualizations')
+st.subheader('Chart 5- Residents Vaccinted Filtered by County')
 
 #List the counties
 counties = df['County'].unique()
@@ -152,14 +156,24 @@ county_select  = st.selectbox(
     options = np.insert(counties,0,'Select All')
 )
 
-race_select  = st.selectbox(
-    label = 'Race/Ethnicity:',
-    options = np.insert(race_ethnicity,0,'Select All')
-)
+if county_select == 'Select All':
+    df_coverage = df.groupby(['Age Group'])['Residents Vaccinated'].sum().reset_index()
+    plt.figure(figsize=(10,6))
+    plt5 = sns.barplot(df_coverage, x="Age Group", y="Residents Vaccinated", width=0.9)
 
-dose_select  = st.selectbox(
-    label = 'Dose:',
-    options = np.insert(dose_administered,0,'Select All')
-)
+    plt5.bar_label(plt5.containers[0], fontsize=7)
+    plt5.set_xticklabels(plt5.get_xticklabels(),
+                        rotation=20, ha="right", fontsize=7)
 
+    st.pyplot(plt5.get_figure())
+else:
+    sub_df = df[df['County'] == county_select]
+    new_df = sub_df.groupby(['Age Group', 'Dose'])['Residents Vaccinated'].sum().reset_index()
+    plt7 = sns.barplot(new_df, x="Age Group", y="Residents Vaccinated", width=0.6, errorbar=None)
+    st.pyplot(plt7.get_figure())
 
+st.markdown('''
+- ## Still working on the last visualization 
+''')
+
+# To fix the last visualization
