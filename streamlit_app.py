@@ -152,11 +152,6 @@ county_select  = st.selectbox(
     options = np.insert(counties,0,'Select All')
 )
 
-age_group_select  = st.selectbox(
-    label = 'Age Group:',
-    options = np.insert(age_group,0,'Select All')
-)
-
 race_select  = st.selectbox(
     label = 'Race/Ethnicity:',
     options = np.insert(race_ethnicity,0,'Select All')
