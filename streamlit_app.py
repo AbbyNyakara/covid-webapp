@@ -147,13 +147,15 @@ st.subheader('Chart 5- Residents Vaccinted Filtered by County')
 
 #List the counties
 counties = df['County'].unique()
+counties = np.insert(counties,0,'Select All')
+
 age_group = df['Age Group'].unique()
 race_ethnicity = df['Race/Ethnicity'].unique()
 dose_administered = df['Dose'].unique()
 
 county_select  = st.selectbox(
     label = 'County:',
-    options = np.insert(counties,0,'Select All')
+    options = counties
 )
 
 if county_select == 'Select All':
@@ -167,13 +169,8 @@ if county_select == 'Select All':
 
     st.pyplot(plt5.get_figure())
 else:
-    sub_df = df[df['County'] == county_select]
+    sub_df = df[df['County'] == f'{county_select}']
+    #print(county_select)
     new_df = sub_df.groupby(['Age Group', 'Dose'])['Residents Vaccinated'].sum().reset_index()
-    plt7 = sns.barplot(new_df, x="Age Group", y="Residents Vaccinated", width=0.6, errorbar=None)
-    st.pyplot(plt7.get_figure())
-
-st.markdown('''
-- ## Still working on the last visualization 
-''')
-
-# To fix the last visualization
+    plt = sns.barplot(new_df, x="Age Group", y="Residents Vaccinated", width=0.6, errorbar=None)
+    st.pyplot(plt.get_figure())
