@@ -150,6 +150,8 @@ else:
                 color_discrete_sequence=px.colors.sequential.RdBu)
     st.plotly_chart(fig3)
 
+st.write("Out of the entire population that was vaccinated, only 21.7% are upto date with the shots. Select to view percentages in each race.")
+
 # Part 5
 st.subheader('Chart 5- Residents Vaccinated Filtered by County')
 
@@ -184,4 +186,5 @@ plt6.set_xticklabels(plt6.get_xticklabels(),
                     rotation=20, ha="right", fontsize=7)
 st.pyplot(plt6.get_figure())
 
+st.write("The graphs show the number of people vaccinated in each county. ")
 
