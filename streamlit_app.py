@@ -13,37 +13,41 @@ alt.data_transformers.enable('default', max_rows=6000)
 st.header("Michigan State Covid Vaccinations")
 st.markdown('''
     ### 1.0 Data
+    - The project analyses the data on michigan state covid vaccinations
+    - The information provided includes the ages, the race, the county, whether the person is upto date 
+        or partially vaccinated and the count of people vaccinated
     - The data used is publicly available on [michigan.gov](https://www.michigan.gov/)
-    - This has also been combined with the Michigan census data 
+    - This has also been combined with the Michigan census data. 
     ''')
 
 # Load the data
 df = pd.read_csv('michigan_vaccinations.csv')
 st.write(df.head())
 
-# Census Data
-st.markdown('''
-        **Statistics** - Source - [Census Data](https://www.census.gov/quickfacts/fact/table/MI/PST045222)
-          - Total population: 10, 034, 113\n
-            
-          By Race: 
-            - White/Caucasian: 78.8% / 7,906,881
-            - Black/African-American: 14.1%/ 1,414,810
-            - Asian/Native Hawaii/Pacific Island: 4% / 401, 365
-            - Hispanic/Latino: 5.7% / 571, 944
-            - Native Americans/Alaska Native: 0.7% / 70, 239
-            -
-        ''')
 
 # Sidebar
 with st.sidebar:
-    st.write("Visualization settings")
+    st.markdown('''
+        ## Datasets Used        
+        **1** [Census Data](https://www.census.gov/quickfacts/fact/table/MI/PST045222)
+          - Total population: 10, 034, 113\n
+            
+          By Race:
+             
+            - White/Caucasian: 78.8% 
 
-# Add a select widget to the sidebar
-chart_type1 = st.sidebar.selectbox(
-    label='Chart 1 - Select the chart type:',
-    options=['Bar Graph', 'Pie Chart']
-)
+            - Black/African-American: 14.1%
+
+            - Asian/Native Hawaii/Pacific Island: 4%
+
+            - Hispanic/Latino: 5.7%
+
+            - Native Americans/Alaska Native: 0.7%
+        
+                
+         **2** [Michigan state covid vaccination data](https://www.michigan.gov/)    
+        ''')
+
 
 # chart 1 - Option 1
 st.subheader('2.0 Data Exploration')
@@ -52,6 +56,10 @@ st.write('Chart 1 - Residents Vaccinated by age-group')
 administered_doses = df.groupby(
     'Age Group')['Residents Vaccinated'].sum().reset_index()
 
+chart_type1 = st.selectbox(
+    label='Select the chart type:',
+    options=['Bar Graph', 'Pie Chart']
+)
 
 if chart_type1 == 'Bar Graph':
     new_order = [9, 10, 5, 0, 1, 2, 3, 4, 6, 7, 8]
@@ -66,7 +74,7 @@ else:
                   color_discrete_sequence=px.colors.sequential.RdBu)
     st.plotly_chart(fig1)
 
-st.write("Considering Michigan's population for 60+ is about 19 percent of the total population(2million) they recorded higher vaccination rates ")
+st.write("A majority of the older people got vaccinated as compared to the younger folk.")
 
 
 # Chart 2 - Vaccination Rates by Race.
@@ -106,7 +114,7 @@ df_dosage_grouped['Percentage vaccinated'] = df_dosage_grouped['Residents Vaccin
     df_dosage_grouped['Population'] * 100
 df_dosage_grouped = df_dosage_grouped.drop(5)
 
-# All vaccinated people 
+# All vaccinated people
 plt.figure(figsize=(8, 6))
 plt.title('Dose Coverage by Race')
 plt4 = sns.barplot(df_dosage_grouped, x="Race/Ethnicity",
@@ -143,34 +151,37 @@ else:
     st.plotly_chart(fig3)
 
 # Part 5
-st.subheader('Chart 5- Residents Vaccinted Filtered by County')
+st.subheader('Chart 5- Residents Vaccinated Filtered by County')
 
 #List the counties
 counties = df['County'].unique()
-counties = np.insert(counties,0,'Select All')
+#counties = np.insert(counties,0,'Select All')
 
 age_group = df['Age Group'].unique()
 race_ethnicity = df['Race/Ethnicity'].unique()
 dose_administered = df['Dose'].unique()
 
+st.write("Select county: ")
 county_select  = st.selectbox(
     label = 'County:',
     options = counties
 )
 
-if county_select == 'Select All':
-    df_coverage = df.groupby(['Age Group'])['Residents Vaccinated'].sum().reset_index()
-    plt.figure(figsize=(10,6))
-    plt5 = sns.barplot(df_coverage, x="Age Group", y="Residents Vaccinated", width=0.9)
+plt.figure(figsize=(10,6))
 
-    plt5.bar_label(plt5.containers[0], fontsize=7)
-    plt5.set_xticklabels(plt5.get_xticklabels(),
-                        rotation=20, ha="right", fontsize=7)
+# User selected variables
+selected_county = county_select
 
-    st.pyplot(plt5.get_figure())
-else:
-    sub_df = df[df['County'] == f'{county_select}']
-    #print(county_select)
-    new_df = sub_df.groupby(['Age Group', 'Dose'])['Residents Vaccinated'].sum().reset_index()
-    plt = sns.barplot(new_df, x="Age Group", y="Residents Vaccinated", width=0.6, errorbar=None)
-    st.pyplot(plt.get_figure())
+# Slice the df
+sub_df = df[df['County'] == selected_county]
+new_df = sub_df.groupby(['Age Group', 'Dose'])['Residents Vaccinated'].sum().reset_index()
+
+#new_df
+
+plt6 = sns.barplot(new_df, x="Age Group", y="Residents Vaccinated", width=0.6, errorbar=None)
+plt6.bar_label(plt6.containers[0], fontsize=7)
+plt6.set_xticklabels(plt6.get_xticklabels(),
+                    rotation=20, ha="right", fontsize=7)
+st.pyplot(plt6.get_figure())
+
+
